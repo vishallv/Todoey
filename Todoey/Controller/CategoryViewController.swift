@@ -8,10 +8,14 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+
+class CategoryViewController: SwipeTableViewController {
     
     let realm =  try! Realm()
+    
+    
     
     var   categoryArray :Results<Category>?
   //  var context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -23,18 +27,38 @@ class CategoryViewController: UITableViewController {
         
         
         loadCategory()
+        tableView.rowHeight = 80
+      //  tableView.estimatedRowHeight = 80.0
+        tableView.separatorStyle = .none
         
         
     }
     
+    
+    
     // MARK: - Table view data source
+    
+//    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! SwipeTableViewCell
+//        cell.delegate = self
+//        return cell
+//    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
         
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categoryArray?[indexPath.row].name ?? "No Category Added"
+    //  cell.backgroundColor = UIColor.randomFlat
         
+        
+        guard let categoryColor = UIColor(hexString: (categoryArray?[indexPath.row].color)!) else {fatalError()}
+        cell.backgroundColor = categoryColor
+        cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
+        
+//        cell.delegate = self
         return cell
         
     }
@@ -67,6 +91,7 @@ class CategoryViewController: UITableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
+           newCategory.color = UIColor.randomFlat.hexValue()
           //  self.categoryArray.append(newCategory)
             
             self.save(category: newCategory)
@@ -127,4 +152,21 @@ class CategoryViewController: UITableViewController {
 //
     
     
-    }}
+    }
+    
+    
+    override func updateModal(at indexPath: IndexPath) {
+        if let categoryForDeletion = categoryArray?[indexPath.row]{
+                            do{
+                                try  self.realm.write {
+                                    self.realm.delete(categoryForDeletion)
+                                }}
+                            catch {
+                                print("Error Deleting \(error)")
+                            }
+        }}
+    
+}
+
+
+

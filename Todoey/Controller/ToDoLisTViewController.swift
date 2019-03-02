@@ -8,12 +8,16 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class ToDoLisTViewController: UITableViewController{
+class ToDoLisTViewController: SwipeTableViewController{
     
     
     var itemArray :Results<Item>?
     let realm = try! Realm()
+    
+    
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var selectedCategory : Category? {
         didSet{
@@ -27,9 +31,11 @@ class ToDoLisTViewController: UITableViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
         // Do any additional setup after loading the view, typically from a nib.
         
         //   print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
         
         // print(dataFilePath)
         
@@ -51,13 +57,50 @@ class ToDoLisTViewController: UITableViewController{
         //        {
         //            itemArray = items
         //        }
+        
+        tableView.rowHeight = 80.0
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        guard let color = selectedCategory?.color else {fatalError()}
+        
+        title = selectedCategory?.name
+        navBarUpdate(color: color)
+        
+        
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navBarUpdate(color: "1D9BF6")
+    }
+    
+    
+    func navBarUpdate (color colorHex :String){
+        guard let navBar = navigationController?.navigationBar else {fatalError("Nav Bar not loaded")}
+        
+        guard let navBarColor = UIColor(hexString: colorHex) else {fatalError()}
+        
+        
+        navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+        navBar.barTintColor = navBarColor
+        searchBar.barTintColor = navBarColor
+        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemList", for: indexPath)
+        //    let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemList", for: indexPath)
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if  let item = itemArray?[indexPath.row]{
             
             cell.textLabel?.text = item.title
+            
+            if let colour = UIColor(hexString: (selectedCategory?.color)!)?.darken(byPercentage: CGFloat(indexPath.row)/CGFloat((itemArray?.count)!)){
+                cell.backgroundColor = colour
+                cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: true)
+            }
             
             
             cell.accessoryType = (item.done == true) ? .checkmark : .none
@@ -85,9 +128,9 @@ class ToDoLisTViewController: UITableViewController{
         if let item = itemArray?[indexPath.row]{
             
             do {
-            try realm.write {
-               item.done = !item.done
-                
+                try realm.write {
+                    item.done = !item.done
+                    
                 }}
             catch{
                 print(error)
@@ -146,7 +189,7 @@ class ToDoLisTViewController: UITableViewController{
                 catch{
                     print("Error Saving Item \(error)")
                 }
-               self.tableView.reloadData()
+                self.tableView.reloadData()
             }
             
             //  newItem.parentCategory = self.selectedCategory
@@ -211,53 +254,68 @@ class ToDoLisTViewController: UITableViewController{
         //        tableView.reloadData()
     }
     
+    override func updateModal(at indexPath: IndexPath) {
+        if let currentItem = itemArray?[indexPath.row]{
+            
+            do{
+                try realm.write {
+                    realm.delete(currentItem)
+                }
+            }
+            catch{
+                print("unable to delete item \(error)")
+            }
+            
+        }
+    }
+    
     
 }
 
 extension ToDoLisTViewController : UISearchBarDelegate{
-//
+    //
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         
         itemArray = itemArray?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
         tableView.reloadData()
-}
-
-//
-//        let request : NSFetchRequest <Item> = Item.fetchRequest()
-//        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//
-//
-//         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//
-//
-//
-//        //  print(searchBar.text!)
-//
-////     -   do {
-////      -      itemArray = try context.fetch(request)
-////       - }
-////        -catch{
-////                    print("Error Fetching : \(error)")
-//
-////        }
-//      // - loadData()
-//
-//        loadData(with: request, predicate: predicate)
-//
-////      -  tableView.reloadData()
-//    }
-//
+    }
+    
+    //
+    //        let request : NSFetchRequest <Item> = Item.fetchRequest()
+    //        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+    //
+    //
+    //         request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+    //
+    //
+    //
+    //
+    //        //  print(searchBar.text!)
+    //
+    ////     -   do {
+    ////      -      itemArray = try context.fetch(request)
+    ////       - }
+    ////        -catch{
+    ////                    print("Error Fetching : \(error)")
+    //
+    ////        }
+    //      // - loadData()
+    //
+    //        loadData(with: request, predicate: predicate)
+    //
+    ////      -  tableView.reloadData()
+    //    }
+    //
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0{
             loadData()
-
+            
             DispatchQueue.main.async {
-                 searchBar.resignFirstResponder()
+                searchBar.resignFirstResponder()
             }
-
+            
         }
     }
-//}
-//
+    //}
+    //
 }
