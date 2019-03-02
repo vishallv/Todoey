@@ -13,8 +13,9 @@
 		C92848982224ED410043B8D1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C92848962224ED410043B8D1 /* Main.storyboard */; };
 		C928489A2224ED420043B8D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C92848992224ED420043B8D1 /* Assets.xcassets */; };
 		C928489D2224ED420043B8D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C928489B2224ED420043B8D1 /* LaunchScreen.storyboard */; };
-		C92848AC22264FD80043B8D1 /* CoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C92848AA22264FD80043B8D1 /* CoreData.xcdatamodeld */; };
 		C92848CF2227385C0043B8D1 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92848CE2227385C0043B8D1 /* CategoryViewController.swift */; };
+		C92848D3222856B60043B8D1 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92848D2222856B60043B8D1 /* Item.swift */; };
+		C92848D5222856C30043B8D1 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = C92848D4222856C30043B8D1 /* Category.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +29,9 @@
 		C92848992224ED420043B8D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C928489C2224ED420043B8D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C928489E2224ED420043B8D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C92848AB22264FD80043B8D1 /* CoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreData.xcdatamodel; sourceTree = "<group>"; };
 		C92848CE2227385C0043B8D1 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
+		C92848D2222856B60043B8D1 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		C92848D4222856C30043B8D1 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +52,6 @@
 				6C9A99CE0F4C8BD1BA5E88E1 /* Pods-Todoey.debug.xcconfig */,
 				C148B4497A20C3FA71DA6C66 /* Pods-Todoey.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -96,7 +97,8 @@
 		C92848A62225DB130043B8D1 /* Modal */ = {
 			isa = PBXGroup;
 			children = (
-				C92848AA22264FD80043B8D1 /* CoreData.xcdatamodeld */,
+				C92848D4222856C30043B8D1 /* Category.swift */,
+				C92848D2222856B60043B8D1 /* Item.swift */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -249,10 +251,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92848D3222856B60043B8D1 /* Item.swift in Sources */,
 				C92848CF2227385C0043B8D1 /* CategoryViewController.swift in Sources */,
-				C92848AC22264FD80043B8D1 /* CoreData.xcdatamodeld in Sources */,
 				C92848952224ED410043B8D1 /* ToDoLisTViewController.swift in Sources */,
 				C92848932224ED410043B8D1 /* AppDelegate.swift in Sources */,
+				C92848D5222856C30043B8D1 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -454,19 +457,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		C92848AA22264FD80043B8D1 /* CoreData.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				C92848AB22264FD80043B8D1 /* CoreData.xcdatamodel */,
-			);
-			currentVersion = C92848AB22264FD80043B8D1 /* CoreData.xcdatamodel */;
-			path = CoreData.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = C92848872224ED410043B8D1 /* Project object */;
 }
